@@ -19,10 +19,11 @@ func (s *Sender) Start(ctx context.Context) (err error) {
 
 	q, err := s.queueClient.Pop()
 	if err != nil {
-		if !errors.Is(err, model.ErrQueueNotFound) {
-			s.Logger.Error("failed to dequeue", zap.Error(err))
-			return err
+		if errors.Is(err, model.ErrQueueNotFound) {
+			return nil
 		}
+		s.Logger.Error("failed to dequeue", zap.Error(err))
+		return err
 	}
 
 	err = s.sendClient.Send(q)

@@ -1,3 +1,3 @@
 package repository
 
-type SendGmailClient struct{}
+type SendClientGmail struct{}

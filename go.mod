@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
 	github.com/spf13/cobra v1.5.0
 	go.uber.org/zap v1.23.0

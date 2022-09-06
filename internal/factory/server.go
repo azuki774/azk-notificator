@@ -23,6 +23,6 @@ func NewServer(opts *ServerRunOption) (*server.Server, error) {
 	}
 
 	// rdb := NewRedisClient(opts.QueueHost, opts.QueuePort, opts.QueuePort)
-	rdb := repository.NewMockRedisClient()
+	rdb := repository.NewMockRedisClient(nil)
 	return &server.Server{Logger: l, Host: opts.Host, Port: opts.Port, QueueClient: rdb}, nil
 }

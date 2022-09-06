@@ -1,6 +1,10 @@
 package server
 
 import (
+	"azk-notificator/internal/model"
+	"azk-notificator/internal/telemetry"
+	"context"
+	"encoding/json"
 	"net"
 	"net/http"
 	"time"
@@ -40,5 +44,27 @@ func (s *Server) Start() (err error) {
 	}
 
 	s.Logger.Info("HTTP server closed")
+	return nil
+}
+
+func (s *Server) Enqueue(ctx context.Context, r *http.Request) (err error) {
+	l := telemetry.LoggerWithSpanID(ctx, s.Logger)
+
+	var q model.Queue
+	err = json.NewDecoder(r.Body).Decode(&q)
+	if err != nil {
+		l.Error("failed to parse the queue", zap.Error(err))
+		return err
+	}
+
+	defer r.Body.Close()
+
+	err = s.QueueClient.Push(q)
+	if err != nil {
+		l.Error("failed to enqueue", zap.Error(err))
+		return err
+	}
+
+	l.Info("enqueue")
 	return nil
 }

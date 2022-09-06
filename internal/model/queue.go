@@ -6,6 +6,8 @@ import (
 )
 
 type Queue struct {
+	From string
+	To   string
 	Kind Queuekind
 	Body string
 }
@@ -24,6 +26,8 @@ const (
 
 func (q *Queue) UnmarshalJSON(b []byte) error {
 	type QueueJSON struct {
+		From string `json:"From"`
+		To   string `json:"To"`
 		Kind string `json:"kind"`
 		Body string `json:"body"`
 	}
@@ -33,6 +37,9 @@ func (q *Queue) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
+
+	q.From = tq.From
+	q.To = tq.To
 
 	switch tq.Kind {
 	case QueueKindEmailStr:

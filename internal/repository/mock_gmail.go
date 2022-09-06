@@ -1,15 +1,13 @@
 package repository
 
-import "azk-notificator/internal/model"
-
-type mockSendGmailClient struct {
+type mockSendClientGmail struct {
 	errSend error
 }
 
-func NewmockSendGmailClient(err error) *mockSendGmailClient {
-	return &mockSendGmailClient{errSend: err}
+func NewmockSendGmailClient(err error) *mockSendClientGmail {
+	return &mockSendClientGmail{errSend: err}
 }
 
-func (m *mockSendGmailClient) Send(q model.Queue) (err error) {
+func (m *mockSendClientGmail) Send(body string) (err error) {
 	return m.errSend
 }
