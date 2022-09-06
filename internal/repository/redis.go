@@ -6,14 +6,14 @@ import (
 	"github.com/go-redis/redis"
 )
 
-type RedisClient struct {
-	Client *redis.Client
+type Redis struct {
+	Client redis.Client
 }
 
-func (r *RedisClient) Push(q model.Queue) (err error) {
+func (r *Redis) Push(q model.Queue) (err error) {
 	return nil
 }
 
-func (r *RedisClient) Pop() (q model.Queue, err error) {
+func (r *Redis) Pop() (q model.Queue, err error) {
 	return model.Queue{}, nil
 }

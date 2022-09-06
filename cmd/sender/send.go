@@ -7,6 +7,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var sendOption factory.SenderRunOption
+
 // sendCmd represents the send command
 var sendCmd = &cobra.Command{
 	Use:   "send",
@@ -19,7 +21,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	RunE: func(cmd *cobra.Command, args []string) (err error) {
 		fmt.Println("send called")
-		sender := factory.NewSender()
+		sender := factory.NewSender(&sendOption)
 		defer sender.Logger.Sync()
 		return sender.Run()
 	},
@@ -36,5 +38,8 @@ func init() {
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// sendCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	sendCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	sendCmd.Flags().StringVar(&sendOption.QueueHost, "queue-host", "localhost", "queue-DB host")
+	sendCmd.Flags().StringVar(&sendOption.QueuePort, "queue-port", "6379", "queue-DB port")
+	sendCmd.Flags().StringVar(&sendOption.QueuePort, "queue-pass", "6379", "queue-DB password")
 }

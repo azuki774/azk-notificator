@@ -3,8 +3,6 @@ package factory
 import (
 	"azk-notificator/internal/repository"
 	"azk-notificator/internal/sender"
-
-	"go.uber.org/zap"
 )
 
 type SenderRunOption struct {
@@ -13,22 +11,21 @@ type SenderRunOption struct {
 	QueuePass string
 }
 
-
 func NewSender(opts *SenderRunOption) *sender.Sender {
 	l, _ := NewLogger()
 	sender := sender.Sender{
-		Logger: l,
-		queueClient: factory.NewRedisClient(opts.QueueHost, opts.QueuePort, opts.QueuePass)
-		sendClient: factory.NewSendClient()
+		Logger:      l,
+		QueueClient: NewRedis(opts.QueueHost, opts.QueuePort, opts.QueuePass),
+		SendClient:  NewSendCli(),
 	}
 	return &sender
 }
 
-func NewSendClient() *sender.SendClient {
-	return &sender.SendClient{SendClientGmail: repository.NewmockSendGmailClient(nil)} // TODO: mock
+func NewSendCli() *sender.SendCli {
+	return &sender.SendCli{SendClientGmail: repository.NewmockSendGmailClient(nil)} // TODO: mock
 }
 
-func NewSendClientGmail() *repository.SendClientGmail {
+func NewSendClientGmail() repository.SendClientGmail {
 	// TODO: Get from ENV
-	return &repository.SendClientGmail{}
+	return repository.SendClientGmail{}
 }

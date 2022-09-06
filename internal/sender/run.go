@@ -9,14 +9,14 @@ import (
 
 type Sender struct {
 	Logger      *zap.Logger
-	queueClient QueueClient
-	sendClient  SendClient
+	QueueClient QueueClient
+	SendClient  SendClient
 }
 
 func (s *Sender) Run() (err error) {
 	s.Logger.Info("sender start")
 
-	q, err := s.queueClient.Pop()
+	q, err := s.QueueClient.Pop()
 	if err != nil {
 		if errors.Is(err, model.ErrQueueNotFound) {
 			return nil
@@ -25,7 +25,7 @@ func (s *Sender) Run() (err error) {
 		return err
 	}
 
-	err = s.sendClient.Send(q)
+	err = s.SendClient.Send(q)
 	if err != nil {
 		s.Logger.Error("failed to send the notification", zap.Error(err))
 	}
