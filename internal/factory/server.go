@@ -1,7 +1,6 @@
 package factory
 
 import (
-	"azk-notificator/internal/repository"
 	"azk-notificator/internal/server"
 )
 
@@ -22,7 +21,6 @@ func NewServer(opts *ServerRunOption) (*server.Server, error) {
 		opts.Port = "80" // default value
 	}
 
-	// rdb := NewRedisClient(opts.QueueHost, opts.QueuePort, opts.QueuePort)
-	rdb := repository.NewMockRedisClient(nil)
+	rdb := NewRedis(opts.QueueHost, opts.QueuePort, opts.QueuePort)
 	return &server.Server{Logger: l, Host: opts.Host, Port: opts.Port, QueueClient: rdb}, nil
 }

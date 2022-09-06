@@ -22,7 +22,7 @@ func NewSender(opts *SenderRunOption) *sender.Sender {
 }
 
 func NewSendCli() *sender.SendCli {
-	return &sender.SendCli{SendClientGmail: repository.NewmockSendGmailClient(nil)} // TODO: mock
+	return &sender.SendCli{} // TODO
 }
 
 func NewSendClientGmail() repository.SendClientGmail {

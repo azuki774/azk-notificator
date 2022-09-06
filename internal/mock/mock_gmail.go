@@ -1,4 +1,4 @@
-package repository
+package mock
 
 import "azk-notificator/internal/model"
 

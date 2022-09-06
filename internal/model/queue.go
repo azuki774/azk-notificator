@@ -6,10 +6,11 @@ import (
 )
 
 type Queue struct {
-	From string
-	To   string
-	Kind Queuekind
-	Body string
+	From  string
+	To    string
+	Kind  Queuekind
+	Title string
+	Body  string
 }
 
 type Queuekind int
@@ -26,10 +27,11 @@ const (
 
 func (q *Queue) UnmarshalJSON(b []byte) error {
 	type QueueJSON struct {
-		From string `json:"From"`
-		To   string `json:"To"`
-		Kind string `json:"kind"`
-		Body string `json:"body"`
+		From  string `json:"from"`
+		To    string `json:"to"`
+		Kind  string `json:"kind"`
+		Title string `json:"title"`
+		Body  string `json:"body"`
 	}
 
 	var tq QueueJSON
@@ -48,6 +50,7 @@ func (q *Queue) UnmarshalJSON(b []byte) error {
 		return ErrQueueUnexpctedKind
 	}
 
+	q.Title = tq.Title
 	q.Body = tq.Body
 	return nil
 }
