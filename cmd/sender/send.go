@@ -1,6 +1,7 @@
 package main
 
 import (
+	"azk-notificator/internal/factory"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -18,8 +19,9 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	RunE: func(cmd *cobra.Command, args []string) (err error) {
 		fmt.Println("send called")
-		
-		return err
+		sender := factory.NewSender()
+		defer sender.Logger.Sync()
+		return sender.Run()
 	},
 }
 

@@ -6,12 +6,12 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-func NewRedisClient(host string, port string, password string) *redis.Client {
+func NewRedisClient(host string, port string, password string) *repository.redisClient {
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     net.JoinHostPort(host, port),
 		Password: password,
 		DB:       0, // use default DB
 	})
 
-	return rdb
+	return &repository.redisClient{Client: rdb}
 }

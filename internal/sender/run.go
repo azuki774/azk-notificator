@@ -2,7 +2,6 @@ package sender
 
 import (
 	"azk-notificator/internal/model"
-	"context"
 	"errors"
 
 	"go.uber.org/zap"
@@ -14,7 +13,7 @@ type Sender struct {
 	sendClient  SendClient
 }
 
-func (s *Sender) Start(ctx context.Context) (err error) {
+func (s *Sender) Run() (err error) {
 	s.Logger.Info("sender start")
 
 	q, err := s.queueClient.Pop()

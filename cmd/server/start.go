@@ -27,6 +27,7 @@ to quickly create a Cobra application.`,
 			return err
 		}
 
+		defer srv.Logger.Sync()
 		return srv.Start()
 	},
 }
