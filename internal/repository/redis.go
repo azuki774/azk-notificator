@@ -8,6 +8,8 @@ import (
 
 type Redis struct {
 	Client redis.Client
+	Host   string
+	Pass   string
 }
 
 func (r *Redis) Push(q model.Queue) (err error) {
