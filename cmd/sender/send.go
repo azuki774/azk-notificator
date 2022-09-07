@@ -41,5 +41,5 @@ func init() {
 	sendCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	sendCmd.Flags().StringVar(&sendOption.QueueHost, "queue-host", "localhost", "queue-DB host")
 	sendCmd.Flags().StringVar(&sendOption.QueuePort, "queue-port", "6379", "queue-DB port")
-	sendCmd.Flags().StringVar(&sendOption.QueuePort, "queue-pass", "6379", "queue-DB password")
+	sendCmd.Flags().StringVar(&sendOption.QueuePort, "queue-pass", "", "queue-DB password")
 }
