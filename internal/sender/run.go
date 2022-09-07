@@ -28,6 +28,7 @@ func (s *Sender) Run() (err error) {
 	err = s.SendClient.Send(q)
 	if err != nil {
 		s.Logger.Error("failed to send the notification", zap.Error(err))
+		return err
 	}
 
 	return nil
