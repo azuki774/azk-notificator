@@ -2,6 +2,7 @@ package repository
 
 import (
 	"azk-notificator/internal/model"
+	"context"
 	"encoding/json"
 
 	"github.com/go-redis/redis"
@@ -14,7 +15,7 @@ type Redis struct {
 	Capacity int
 }
 
-func (r *Redis) Push(q model.Queue) (err error) {
+func (r *Redis) Push(ctx context.Context, q model.Queue) (err error) {
 	pd, err := json.Marshal(q)
 	if err != nil {
 		return err
@@ -38,6 +39,6 @@ func (r *Redis) Push(q model.Queue) (err error) {
 	return nil
 }
 
-func (r *Redis) Pop() (q model.Queue, err error) {
+func (r *Redis) Pop(ctx context.Context) (q model.Queue, err error) {
 	return model.Queue{}, nil
 }

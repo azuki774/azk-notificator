@@ -1,6 +1,9 @@
 package mock
 
-import "azk-notificator/internal/model"
+import (
+	"azk-notificator/internal/model"
+	"context"
+)
 
 type mockRedis struct {
 	q   model.Queue
@@ -11,10 +14,10 @@ func NewMockRedisClient(err error) *mockRedis {
 	return &mockRedis{err: err}
 }
 
-func (m *mockRedis) Push(q model.Queue) (err error) {
+func (m *mockRedis) Push(ctx context.Context, q model.Queue) (err error) {
 	return m.err
 }
 
-func (m *mockRedis) Pop() (q model.Queue, err error) {
+func (m *mockRedis) Pop(ctx context.Context) (q model.Queue, err error) {
 	return m.q, m.err
 }

@@ -3,6 +3,7 @@ package sender
 import (
 	"azk-notificator/internal/mock"
 	"azk-notificator/internal/model"
+	"context"
 	"errors"
 	"testing"
 )
@@ -12,7 +13,8 @@ func TestSendCli_Send(t *testing.T) {
 		SendClientGmail SendClientEmail
 	}
 	type args struct {
-		q model.Queue
+		ctx context.Context
+		q   model.Queue
 	}
 	tests := []struct {
 		name    string
@@ -44,7 +46,7 @@ func TestSendCli_Send(t *testing.T) {
 			s := &SendCli{
 				SendClientGmail: tt.fields.SendClientGmail,
 			}
-			if err := s.Send(tt.args.q); (err != nil) != tt.wantErr {
+			if err := s.Send(tt.args.ctx, tt.args.q); (err != nil) != tt.wantErr {
 				t.Errorf("SendCli.Send() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})

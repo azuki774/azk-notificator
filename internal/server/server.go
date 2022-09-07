@@ -59,7 +59,7 @@ func (s *Server) Enqueue(ctx context.Context, r *http.Request) (err error) {
 
 	defer r.Body.Close()
 
-	err = s.QueueClient.Push(q)
+	err = s.QueueClient.Push(ctx, q)
 	if err != nil {
 		l.Error("failed to enqueue", zap.Error(err))
 		return err

@@ -20,7 +20,7 @@ var (
 {
 	"from": "from-test",
 	"to": "test123+abcde@gmail.com",
-	"kind": "email",
+	"kind": 1,
 	"title": "title test",
 	"body": "abcde\nfghij\n12345"
 }
