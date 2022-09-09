@@ -24,9 +24,9 @@ var (
 )
 
 const (
-	QueueKindOnlyLog    = Queuekind(0)
+	QueueKindOnlyLog    = Queuekind(1)
 	QueueKindOnlyLogStr = "onlylog"
-	QueueKindEmail      = Queuekind(1)
+	QueueKindEmail      = Queuekind(2)
 	QueueKindEmailStr   = "email"
 )
 
