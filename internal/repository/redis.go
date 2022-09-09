@@ -4,11 +4,16 @@ import (
 	"azk-notificator/internal/model"
 	"context"
 	"encoding/json"
+	"errors"
 
 	"github.com/go-redis/redis"
 )
 
-const queueKey = "queue"
+type queueKey struct{}
+
+var rediskey queueKey
+
+const defaultKey = "queue"
 
 type Redis struct {
 	Client   *redis.Client
@@ -22,7 +27,7 @@ func (r *Redis) Push(ctx context.Context, q model.Queue) (err error) {
 	}
 
 	// Check Capacity
-	cmd := r.Client.LLen(queueKey)
+	cmd := r.Client.LLen(r.getKeyName(ctx))
 	if cmd.Err() != nil {
 		return cmd.Err()
 	}
@@ -32,7 +37,7 @@ func (r *Redis) Push(ctx context.Context, q model.Queue) (err error) {
 	}
 
 	// push record
-	err = r.Client.RPush(queueKey, string(pd)).Err()
+	err = r.Client.RPush(r.getKeyName(ctx), string(pd)).Err()
 	if err != nil {
 		return err
 	}
@@ -40,5 +45,38 @@ func (r *Redis) Push(ctx context.Context, q model.Queue) (err error) {
 }
 
 func (r *Redis) Pop(ctx context.Context) (q model.Queue, err error) {
-	return model.Queue{}, nil
+	cmd := r.Client.LPop(r.getKeyName(ctx))
+	if errors.Is(cmd.Err(), redis.Nil) {
+		return model.Queue{}, model.ErrQueueNotFound
+	}
+	if err != nil {
+		return model.Queue{}, err
+	}
+
+	b, err := cmd.Bytes()
+	if err != nil {
+		return model.Queue{}, err
+	}
+
+	err = q.UnmarshalJSON(b)
+	if err != nil {
+		return model.Queue{}, err
+	}
+
+	return q, nil
+}
+
+// getKeyName get redis-key name from ctx.
+// If not exists from ctx, use default queueKey.
+func (r *Redis) getKeyName(ctx context.Context) string {
+	v := ctx.Value(rediskey)
+	key, ok := v.(string)
+	if !ok {
+		return defaultKey
+	}
+
+	if key == "" {
+		return defaultKey
+	}
+	return key
 }
