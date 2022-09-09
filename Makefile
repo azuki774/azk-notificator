@@ -18,6 +18,9 @@ stop:
 	docker compose -f deployment/compose-local.yml down
 
 test:
+	docker compose -f deployment/redis.yml down
+	docker compose -f deployment/redis.yml up -d
+	sleep 3s
 	go test -v ./...
 
 restart:

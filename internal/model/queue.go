@@ -24,8 +24,10 @@ var (
 )
 
 const (
-	QueueKindEmail    = Queuekind(1)
-	QueueKindEmailStr = "email"
+	QueueKindOnlyLog    = Queuekind(0)
+	QueueKindOnlyLogStr = "onlylog"
+	QueueKindEmail      = Queuekind(1)
+	QueueKindEmailStr   = "email"
 )
 
 func (q *Queue) UnmarshalJSON(b []byte) error {
