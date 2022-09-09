@@ -1,15 +1,18 @@
 package model
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
+	"strings"
 )
 
 type Queue struct {
-	From  string
-	To    string
-	Kind  Queuekind
-	Title string
-	Body  string
+	From  string    `json:"from"`
+	To    string    `json:"to"`
+	Kind  Queuekind `json:"kind"`
+	Title string    `json:"title"`
+	Body  string    `json:"body"` // use \n (in case of JSON, use <br> )
 }
 
 type Queuekind int
@@ -25,32 +28,30 @@ const (
 	QueueKindEmailStr = "email"
 )
 
-// func (q *Queue) UnmarshalJSON(b []byte) error {
-// 	type QueueJSON struct {
-// 		From  string `json:"from"`
-// 		To    string `json:"to"`
-// 		Kind  string `json:"kind"`
-// 		Title string `json:"title"`
-// 		Body  string `json:"body"`
-// 	}
+func (q *Queue) UnmarshalJSON(b []byte) error {
+	type QueueTmp struct {
+		From  string    `json:"from"`
+		To    string    `json:"to"`
+		Kind  Queuekind `json:"kind"`
+		Title string    `json:"title"`
+		Body  string    `json:"body"`
+	}
 
-// 	var tq QueueJSON
-// 	err := json.Unmarshal(b, &tq)
-// 	if err != nil {
-// 		return err
-// 	}
+	sb := string(b)
+	repb := strings.ReplaceAll(sb, "\n", "<br>")
+	fmt.Println(repb)
 
-// 	q.From = tq.From
-// 	q.To = tq.To
+	var qtmp QueueTmp
+	err := json.Unmarshal([]byte(repb), &qtmp)
+	if err != nil {
+		return err
+	}
 
-// 	switch tq.Kind {
-// 	case QueueKindEmailStr:
-// 		q.Kind = QueueKindEmail
-// 	default:
-// 		return ErrQueueUnexpctedKind
-// 	}
+	q.From = qtmp.From
+	q.To = qtmp.To
+	q.Kind = qtmp.Kind
+	q.Title = qtmp.Title
+	q.Body = strings.ReplaceAll(qtmp.Body, "<br>", "\n")
 
-// 	q.Title = tq.Title
-// 	q.Body = tq.Body
-// 	return nil
-// }
+	return nil
+}

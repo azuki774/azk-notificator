@@ -16,15 +16,7 @@ import (
 var l *zap.Logger
 
 var (
-	testdata1Str string = `
-{
-	"from": "from-test",
-	"to": "test123+abcde@gmail.com",
-	"kind": 1,
-	"title": "title test",
-	"body": "abcde\nfghij\n12345"
-}
-`
+	testdata1Str          string = `{"to": "test123+abcde@gmail.com","kind": 1,"title": "title","body":"test\nてすと\n試験"}`
 	testdata1ReaderCloser io.ReadCloser
 )
 
