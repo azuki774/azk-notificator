@@ -10,7 +10,7 @@ import (
 
 func TestSendCli_Send(t *testing.T) {
 	type fields struct {
-		SendClientGmail SendClientEmail
+		SendClientGmail SendOneClient
 	}
 	type args struct {
 		ctx context.Context
