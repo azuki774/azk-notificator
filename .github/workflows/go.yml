@@ -23,7 +23,7 @@ jobs:
         run: go build -v ./...
 
       - name: Run Redis
-        run: docker compose -f deployment/compose-local.yml up -d
+        run: docker compose -f deployment/redis.yml up -d
 
       - name: Test
         run: go test -v ./...
