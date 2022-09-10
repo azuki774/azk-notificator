@@ -1,17 +1,16 @@
 CURRENT_DIR=$(shell pwd)
 BUILD_DIR=$(CURRENT_DIR)/build
-BIN_DIR=$(BUILD_DIR)/bin
+BIN_DIR=$(BUILD_DIR)/bin/
 
-CONTAINER_SENDER:=azuki774/azk-notificator-sender:latest
-CONTAINER_SERVER:=azuki774/azk-notificator-server:latest
+CONTAINER_SENDER:=azk-notificator-sender:latest
+CONTAINER_SERVER:=azk-notificator-server:latest
 SENDER_CMD=$(CURRENT_DIR)/cmd/sender/
 SERVER_CMD=$(CURRENT_DIR)/cmd/server/
 
 .PHONY: build start stop test restart
 
 build:
-	cd $(SENDER_CMD) && CGO_ENABLED=0 go build -o $(BIN_DIR)/sender ./...
-	cd $(SERVER_CMD) && CGO_ENABLED=0 go build -o $(BIN_DIR)/server ./...
+	CGO_ENABLED=0 go build -o build/bin/ ./...
 	docker build -t ${CONTAINER_SENDER} -f build/Dockerfile-sender .
 	docker build -t ${CONTAINER_SERVER} -f build/Dockerfile-server .
 
