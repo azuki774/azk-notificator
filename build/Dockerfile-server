@@ -1,0 +1,4 @@
+FROM alpine:latest
+
+ADD build/bin/server /usr/local/bin/server
+ENTRYPOINT ["/usr/local/bin/server", "start"]

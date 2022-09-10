@@ -1,0 +1,20 @@
+services:
+  redis:
+    image: redis:7.0
+    restart: always
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  server:
+    image: azuki774/azk-notificator-server
+    restart: always
+    container_name: azk-notificator-server
+    ports:
+      - "8080:80"
+
+  sender:
+    image: azuki774/azk-notificator-sender
+    restart: always
+    container_name: azk-notificator-sender
+    command: --queue-host redis
