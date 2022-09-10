@@ -17,7 +17,8 @@ func GenUUID() uuid.UUID {
 	return uuidObj
 }
 
-func NewCtxWithSpanID(id uuid.UUID) context.Context {
+func NewCtxWithSpanID() context.Context {
+	id := GenUUID()
 	ctx := context.WithValue(context.Background(), spanIDStr, id.String)
 	return ctx
 }

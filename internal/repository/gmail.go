@@ -1,3 +1,7 @@
 package repository
 
-type SendClientGmail struct{}
+type SendClientGmail struct {
+	DefaultFrom  string
+	DefaultTo    string
+	DefaultTitle string
+}

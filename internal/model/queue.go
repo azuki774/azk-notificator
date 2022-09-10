@@ -15,6 +15,12 @@ type Queue struct {
 	Body  string    `json:"body"` // use \n (in case of JSON, use <br> )
 }
 
+type EnqueueHeader struct {
+	From  string `schema:"from"`
+	To    string `schema:"to"`
+	Title string `schema:"title"`
+}
+
 type Queuekind int
 
 var (
