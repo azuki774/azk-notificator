@@ -1,0 +1,4 @@
+FROM alpine:latest
+
+ADD build/bin/sender /usr/local/bin/sender
+ENTRYPOINT ["/usr/local/bin/sender", "send"]
