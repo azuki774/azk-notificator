@@ -59,3 +59,15 @@ func (s *Server) Enqueue(ctx context.Context, q model.Queue) (err error) {
 	l.Info("enqueue")
 	return nil
 }
+
+func (s *Server) Dequeue(ctx context.Context) (q model.Queue, err error) {
+	l := telemetry.LoggerWithSpanID(ctx, s.Logger)
+	q, err = s.QueueClient.Pop(ctx)
+	if err != nil {
+		l.Error("failed to dequeue", zap.Error(err))
+		return model.Queue{}, err
+	}
+
+	l.Info("dequeue")
+	return q, nil
+}

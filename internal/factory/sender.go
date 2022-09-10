@@ -8,17 +8,17 @@ import (
 )
 
 type SenderRunOption struct {
-	QueueHost string
-	QueuePort string
-	QueuePass string
+	ServerHost string
+	ServerPort string
 }
 
 func NewSender(opts *SenderRunOption) *sender.Sender {
 	l, _ := NewLogger()
 	sender := sender.Sender{
-		Logger:      l,
-		QueueClient: NewRedis(opts.QueueHost, opts.QueuePort, opts.QueuePass),
-		SendClient:  NewSendCli(l),
+		Logger:     l,
+		SendClient: NewSendCli(l),
+		ServerHost: opts.ServerHost,
+		ServerPort: opts.ServerPort,
 	}
 	return &sender
 }

@@ -53,12 +53,12 @@ func (r *Redis) Pop(ctx context.Context) (q model.Queue, err error) {
 		return model.Queue{}, err
 	}
 
-	b, err := cmd.Bytes()
+	allb, err := cmd.Bytes()
 	if err != nil {
 		return model.Queue{}, err
 	}
 
-	err = q.UnmarshalJSON(b)
+	err = json.Unmarshal(allb, &q)
 	if err != nil {
 		return model.Queue{}, err
 	}

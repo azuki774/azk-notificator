@@ -17,4 +17,4 @@ services:
   sender:
     image: azk-notificator-sender
     container_name: azk-notificator-sender
-    command: --queue-host redis
+    command: --server-host server

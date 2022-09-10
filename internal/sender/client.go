@@ -39,6 +39,6 @@ func (s *SendCli) Send(ctx context.Context, q model.Queue) (err error) {
 }
 
 func (l SendClientOnlyLog) Send(ctx context.Context, q model.Queue) (err error) {
-	l.Logger.Info("send only log", zap.String("from", q.From), zap.String("to", q.To), zap.Int("kind", int(q.Kind)), zap.String("title", q.Title), zap.String("body", q.Body))
+	l.Logger.Info("send only log", zap.String("from", q.From), zap.String("to", q.To), zap.Int("kind", int(q.Kind)), zap.String("title", q.Title), zap.String("body", string(q.Body)))
 	return nil
 }
