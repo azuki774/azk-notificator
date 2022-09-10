@@ -20,25 +20,25 @@ type QueueClient interface {
 	Pop(ctx context.Context) (q model.Queue, err error)
 }
 type SendCli struct {
-	SencClientOnlyLog SendOneClient
+	SendClientOnlyLog SendOneClient
 	SendClientGmail   SendOneClient
 }
 
-type SencClientOnlyLog struct {
-	logger *zap.Logger
+type SendClientOnlyLog struct {
+	Logger *zap.Logger
 }
 
 func (s *SendCli) Send(ctx context.Context, q model.Queue) (err error) {
 	switch q.Kind {
 	case model.QueueKindOnlyLog:
-		return s.SencClientOnlyLog.Send(ctx, q)
+		return s.SendClientOnlyLog.Send(ctx, q)
 	case model.QueueKindEmail:
 		return s.SendClientGmail.Send(ctx, q)
 	}
 	return model.ErrQueueUnexpctedKind
 }
 
-func (l SencClientOnlyLog) Send(ctx context.Context, q *model.Queue) (err error) {
-	l.logger.Info("send only log", zap.String("from", q.From), zap.String("to", q.To), zap.Int("kind", int(q.Kind)), zap.String("title", q.Title), zap.String("body", q.Body))
+func (l SendClientOnlyLog) Send(ctx context.Context, q model.Queue) (err error) {
+	l.Logger.Info("send only log", zap.String("from", q.From), zap.String("to", q.To), zap.Int("kind", int(q.Kind)), zap.String("title", q.Title), zap.String("body", q.Body))
 	return nil
 }

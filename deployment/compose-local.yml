@@ -10,6 +10,7 @@ services:
     image: azk-notificator-server
     restart: always
     container_name: azk-notificator-server
+    command: --queue-host redis
     ports:
       - "8080:80"
 

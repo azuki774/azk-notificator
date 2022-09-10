@@ -4,7 +4,6 @@ import (
 	"azk-notificator/internal/model"
 	"azk-notificator/internal/telemetry"
 	"context"
-	"encoding/json"
 	"net"
 	"net/http"
 	"time"
@@ -33,6 +32,8 @@ func (s *Server) NewHTTPServer() (srv *http.Server, err error) {
 
 func (s *Server) Start() (err error) {
 	s.Logger.Info("server start")
+	ServerForHandler = s
+
 	httpSrv, err := s.NewHTTPServer()
 	if err != nil {
 		s.Logger.Error("failed to create HTTP Server", zap.Error(err))
@@ -47,18 +48,8 @@ func (s *Server) Start() (err error) {
 	return nil
 }
 
-func (s *Server) Enqueue(ctx context.Context, r *http.Request) (err error) {
+func (s *Server) Enqueue(ctx context.Context, q model.Queue) (err error) {
 	l := telemetry.LoggerWithSpanID(ctx, s.Logger)
-
-	var q model.Queue
-	err = json.NewDecoder(r.Body).Decode(&q)
-	if err != nil {
-		l.Error("failed to parse the queue", zap.Error(err))
-		return err
-	}
-
-	defer r.Body.Close()
-
 	err = s.QueueClient.Push(ctx, q)
 	if err != nil {
 		l.Error("failed to enqueue", zap.Error(err))

@@ -9,10 +9,9 @@ import (
 
 func NewRedis(host string, port string, password string) *repository.Redis {
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     net.JoinHostPort(host, port),
-		Password: password,
-		DB:       0, // use default DB
+		Addr: net.JoinHostPort(host, port),
+		DB:   0, // use default DB
 	})
 
-	return &repository.Redis{Client: rdb}
+	return &repository.Redis{Client: rdb, Capacity: 10}
 }

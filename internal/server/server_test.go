@@ -2,11 +2,11 @@ package server
 
 import (
 	"azk-notificator/internal/mock"
+	"azk-notificator/internal/model"
 	"context"
 	"errors"
 	"io"
 	"io/ioutil"
-	"net/http"
 	"strings"
 	"testing"
 
@@ -37,7 +37,7 @@ func TestServer_Enqueue(t *testing.T) {
 	}
 	type args struct {
 		ctx context.Context
-		r   *http.Request
+		q   model.Queue
 	}
 	tests := []struct {
 		name    string
@@ -53,8 +53,10 @@ func TestServer_Enqueue(t *testing.T) {
 			},
 			args: args{
 				ctx: context.Background(),
-				r: &http.Request{
-					Body: testdata1ReaderCloser,
+				q: model.Queue{
+					To:   "testtest@abc.com",
+					Kind: 1,
+					Body: "test\ntest",
 				},
 			},
 			wantErr: false,
@@ -67,8 +69,10 @@ func TestServer_Enqueue(t *testing.T) {
 			},
 			args: args{
 				ctx: context.Background(),
-				r: &http.Request{
-					Body: testdata1ReaderCloser,
+				q: model.Queue{
+					To:   "testtest@abc.com",
+					Kind: 1,
+					Body: "test\ntest",
 				},
 			},
 			wantErr: true,
@@ -82,7 +86,7 @@ func TestServer_Enqueue(t *testing.T) {
 				Host:        tt.fields.Host,
 				Port:        tt.fields.Port,
 			}
-			if err := s.Enqueue(tt.args.ctx, tt.args.r); (err != nil) != tt.wantErr {
+			if err := s.Enqueue(tt.args.ctx, tt.args.q); (err != nil) != tt.wantErr {
 				t.Errorf("Server.Enqueue() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
