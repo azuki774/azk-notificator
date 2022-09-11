@@ -12,16 +12,18 @@ import (
 
 var redisClient *redis.Client
 
-var testBody string = "test\nてすと\n試験"
+var testBodyStr string = "test\nてすと\n試験"
+var testBody []byte = []byte{116, 101, 115, 116, 10, 227, 129, 166, 227, 129, 153, 227, 129, 168, 10, 232, 169, 166, 233, 168, 147}
 
 func TestMain(m *testing.M) {
 	redisClient = redis.NewClient(&redis.Options{
-		Addr:     net.JoinHostPort("localhost", "6379"),
-		Password: "",
-		DB:       0, // use default DB
+		Addr: net.JoinHostPort("localhost", "6379"),
+		DB:   0, // use default DB
 	})
 
-	poptest1str := `{"to": "test123+abcde@gmail.com","kind": 1,"title": "title","body":"test\nてすと\n試験"}`
+	poptest1str := `{"to": "test123+abcde@gmail.com","kind": 1,"title": "title",
+	"body": [116, 101, 115, 116, 10, 227, 129, 166, 227, 129, 153, 227, 129, 168, 10, 232, 169, 166, 233, 168, 147]}`
+
 	err := redisClient.RPush("poptest1", poptest1str).Err()
 	if err != nil {
 		panic(err)
@@ -68,7 +70,7 @@ func TestRedis_Push(t *testing.T) {
 				Capacity: 1,
 			},
 			args: args{
-				ctx: context.WithValue(context.Background(), rediskey, "poptest1"),
+				ctx: context.WithValue(context.Background(), rediskey, "poptest1"), // over capacity if 'poptest1' is not empty
 				q: model.Queue{
 					To:    "abcde@xyz.com",
 					Kind:  model.QueueKindEmail,

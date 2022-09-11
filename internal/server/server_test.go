@@ -16,7 +16,11 @@ import (
 var l *zap.Logger
 
 var (
-	testdata1Str          string = `{"to": "test123+abcde@gmail.com","kind": 1,"title": "title","body":"test\nてすと\n試験"}`
+	testBody []byte = []byte{116, 101, 115, 116, 10, 227, 129, 166, 227, 129, 153, 227, 129, 168, 10, 232, 169, 166, 233, 168, 147}
+
+	testdata1Str string = `{"to": "test123+abcde@gmail.com",
+	"kind": 1,"title": "title",
+	"body":[116, 101, 115, 116, 10, 227, 129, 166, 227, 129, 153, 227, 129, 168, 10, 232, 169, 166, 233, 168, 147]}`
 	testdata1ReaderCloser io.ReadCloser
 )
 
@@ -56,7 +60,7 @@ func TestServer_Enqueue(t *testing.T) {
 				q: model.Queue{
 					To:   "testtest@abc.com",
 					Kind: 1,
-					Body: "test\ntest",
+					Body: testBody,
 				},
 			},
 			wantErr: false,
@@ -72,7 +76,7 @@ func TestServer_Enqueue(t *testing.T) {
 				q: model.Queue{
 					To:   "testtest@abc.com",
 					Kind: 1,
-					Body: "test\ntest",
+					Body: testBody,
 				},
 			},
 			wantErr: true,

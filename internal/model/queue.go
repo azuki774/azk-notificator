@@ -1,10 +1,7 @@
 package model
 
 import (
-	"encoding/json"
 	"errors"
-	"fmt"
-	"strings"
 )
 
 type Queue struct {
@@ -12,7 +9,7 @@ type Queue struct {
 	To    string    `json:"to"`
 	Kind  Queuekind `json:"kind"`
 	Title string    `json:"title"`
-	Body  string    `json:"body"` // use \n (in case of JSON, use <br> )
+	Body  []byte    `json:"body"`
 }
 
 type EnqueueHeader struct {
@@ -31,35 +28,7 @@ var (
 
 const (
 	QueueKindOnlyLog    = Queuekind(1)
-	QueueKindOnlyLogStr = "onlylog"
+	QueueKindOnlyLogStr = "logonly"
 	QueueKindEmail      = Queuekind(2)
 	QueueKindEmailStr   = "email"
 )
-
-func (q *Queue) UnmarshalJSON(b []byte) error {
-	type QueueTmp struct {
-		From  string    `json:"from"`
-		To    string    `json:"to"`
-		Kind  Queuekind `json:"kind"`
-		Title string    `json:"title"`
-		Body  string    `json:"body"`
-	}
-
-	sb := string(b)
-	repb := strings.ReplaceAll(sb, "\n", "<br>")
-	fmt.Println(repb)
-
-	var qtmp QueueTmp
-	err := json.Unmarshal([]byte(repb), &qtmp)
-	if err != nil {
-		return err
-	}
-
-	q.From = qtmp.From
-	q.To = qtmp.To
-	q.Kind = qtmp.Kind
-	q.Title = qtmp.Title
-	q.Body = strings.ReplaceAll(qtmp.Body, "<br>", "\n")
-
-	return nil
-}

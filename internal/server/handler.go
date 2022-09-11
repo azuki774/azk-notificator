@@ -3,6 +3,8 @@ package server
 import (
 	"azk-notificator/internal/model"
 	"azk-notificator/internal/telemetry"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -53,17 +55,45 @@ func enqueueHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
-	q.Body = string(body)
+	q.Body = body
 
 	ctx := telemetry.NewCtxWithSpanID()
 	err = ServerForHandler.Enqueue(ctx, q)
 
 	if err != nil {
+		if errors.Is(err, model.ErrOverCapacity) {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			fmt.Fprintf(w, "queue over capacity: %v\n", err)
+		}
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(w, "internal error: %v\n", err)
 	}
 
 	w.WriteHeader(http.StatusNoContent)
+}
+
+func dequeueHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := telemetry.NewCtxWithSpanID()
+	q, err := ServerForHandler.Dequeue(ctx)
+	if err != nil {
+		if errors.Is(err, model.ErrQueueNotFound) {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, "internal error: %v\n", err)
+		return
+	}
+
+	b, err := json.Marshal(q)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, "internal error: %v\n", err)
+		return
+	}
+
+	fmt.Fprintln(w, string(b))
+	w.WriteHeader(http.StatusOK)
 }
 
 func NewHandler() (r *mux.Router) {
@@ -72,5 +102,6 @@ func NewHandler() (r *mux.Router) {
 	// Add Hundler
 	r.HandleFunc("/", rootHandler)
 	r.HandleFunc("/enqueue/{queue_kind}", enqueueHandler).Methods("POST")
+	r.HandleFunc("/dequeue", dequeueHandler).Methods("POST")
 	return r
 }

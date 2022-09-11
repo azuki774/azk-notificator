@@ -39,7 +39,6 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	sendCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	sendCmd.Flags().StringVar(&sendOption.QueueHost, "queue-host", "localhost", "queue-DB host")
-	sendCmd.Flags().StringVar(&sendOption.QueuePort, "queue-port", "6379", "queue-DB port")
-	sendCmd.Flags().StringVar(&sendOption.QueuePass, "queue-pass", "", "queue-DB password")
+	sendCmd.Flags().StringVar(&sendOption.ServerHost, "server-host", "server", "server host")
+	sendCmd.Flags().StringVar(&sendOption.ServerPort, "server-port", "80", "server port")
 }

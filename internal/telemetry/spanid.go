@@ -3,14 +3,15 @@ package telemetry
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 )
 
-type spanID string
+type spanID struct{}
 
-const spanIDStr spanID = "spanID"
+var spanIDkey spanID
 
 func GenUUID() uuid.UUID {
 	uuidObj, _ := uuid.NewRandom()
@@ -19,12 +20,13 @@ func GenUUID() uuid.UUID {
 
 func NewCtxWithSpanID() context.Context {
 	id := GenUUID()
-	ctx := context.WithValue(context.Background(), spanIDStr, id.String)
+	ctx := context.WithValue(context.Background(), spanIDkey, id.String())
+	fmt.Println(id)
 	return ctx
 }
 
 func GetSpanIDWithCtx(ctx context.Context) (string, error) {
-	v := ctx.Value(spanIDStr)
+	v := ctx.Value(spanIDkey)
 
 	spanID, ok := v.(string)
 	if !ok {

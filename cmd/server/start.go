@@ -46,7 +46,7 @@ func init() {
 	startCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	startCmd.Flags().StringVar(&runOption.Host, "host", "", "listen host")
 	startCmd.Flags().StringVar(&runOption.Port, "port", "80", "listen port")
-	startCmd.Flags().StringVar(&runOption.QueueHost, "queue-host", "localhost", "queue-DB host")
+	startCmd.Flags().StringVar(&runOption.QueueHost, "queue-host", "redis", "queue-DB host")
 	startCmd.Flags().StringVar(&runOption.QueuePort, "queue-port", "6379", "queue-DB port")
 	startCmd.Flags().StringVar(&runOption.QueuePort, "queue-pass", "6379", "queue-DB password")
 }
