@@ -4,6 +4,7 @@ import (
 	"azk-notificator/internal/model"
 	"azk-notificator/internal/telemetry"
 	"context"
+	"errors"
 	"net"
 	"net/http"
 	"time"
@@ -64,7 +65,10 @@ func (s *Server) Dequeue(ctx context.Context) (q model.Queue, err error) {
 	l := telemetry.LoggerWithSpanID(ctx, s.Logger)
 	q, err = s.QueueClient.Pop(ctx)
 	if err != nil {
-		l.Error("failed to dequeue", zap.Error(err))
+		if !errors.Is(err, model.ErrQueueNotFound) {
+			l.Error("failed to dequeue", zap.Error(err))
+		}
+		// ErrQueueNotFound
 		return model.Queue{}, err
 	}
 
