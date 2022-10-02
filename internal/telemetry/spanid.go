@@ -3,7 +3,6 @@ package telemetry
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -21,7 +20,6 @@ func GenUUID() uuid.UUID {
 func NewCtxWithSpanID() context.Context {
 	id := GenUUID()
 	ctx := context.WithValue(context.Background(), spanIDkey, id.String())
-	fmt.Println(id)
 	return ctx
 }
 
