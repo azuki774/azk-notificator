@@ -20,7 +20,7 @@ type Sender struct {
 }
 
 func (s *Sender) Run() (err error) {
-	s.Logger.Info("sender start")
+	s.Logger.Debug("sender start")
 
 	for {
 		ctx := telemetry.NewCtxWithSpanID()
@@ -41,7 +41,7 @@ func (s *Sender) Run() (err error) {
 
 		if res.StatusCode != 200 {
 			if res.StatusCode == 204 {
-				l.Info("not found notification sending")
+				l.Debug("not found notification sending")
 				return nil
 			} else {
 				l.Error("dequeue unexpected status code")
